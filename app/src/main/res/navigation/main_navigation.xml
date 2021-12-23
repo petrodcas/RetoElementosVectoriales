@@ -63,7 +63,7 @@
             app:popUpTo="@+id/title_destination" />
         <argument
             android:name="score"
-            android:defaultValue="0"
-            app:argType="integer" />
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 </navigation>

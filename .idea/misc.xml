@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudio/GuessTheWord-Starter/app/src/main/res/layout/game_fragment.xml" value="0.33" />
         <entry key="..\:/AndroidStudio/GuessTheWord-Starter/app/src/main/res/layout/main_activity.xml" value="0.36666666666666664" />
+        <entry key="..\:/AndroidStudio/GuessTheWord-Starter/app/src/main/res/layout/score_fragment.xml" value="0.33" />
         <entry key="..\:/AndroidStudio/GuessTheWord-Starter/app/src/main/res/layout/title_fragment.xml" value="0.36666666666666664" />
       </map>
     </option>
