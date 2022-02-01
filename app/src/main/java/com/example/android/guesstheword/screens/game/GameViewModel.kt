@@ -255,7 +255,10 @@ class GameViewModel : ViewModel() {
                Log.d(":::CHRONO", "Destruyendo el cronómetro. Valor del contador: ${_currentTime.value}")
                //Se llama al método onGameFinish() solo si el contador ya tiene un valor igual o menor (para solventar casos de error)
                //al de DONE.
-               if ( (_currentTime.value as Long) <= DONE) onGameFinish()
+               if ( (_currentTime.value as Long) <= DONE) {
+                   _chronoState.value = false
+                   onGameFinish()
+               }
            }
        }
     }
