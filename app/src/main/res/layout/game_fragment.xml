@@ -58,7 +58,7 @@
             android:textColor="@color/black_text_color"
             android:textSize="34sp"
             android:textStyle="normal"
-            app:layout_constraintBottom_toTopOf="@+id/imageView2"
+            app:layout_constraintBottom_toTopOf="@+id/chronoImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -77,12 +77,12 @@
             android:textColor="@color/grey_text_color"
             android:textSize="14sp"
             android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-            app:layout_constraintEnd_toStartOf="@+id/imageView2"
+            app:layout_constraintBottom_toBottomOf="@+id/chronoImage"
+            app:layout_constraintEnd_toStartOf="@+id/chronoImage"
             app:layout_constraintHorizontal_bias=".5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="@+id/chronoImage"
             tools:text="0:00" />
 
         <TextView
@@ -152,7 +152,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{gameViewModel.hintWord}"
-            app:layout_constraintBottom_toTopOf="@+id/imageView2"
+            app:layout_constraintBottom_toTopOf="@+id/chronoImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/word_text"
@@ -160,12 +160,13 @@
             tools:text="Current word..." />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/chronoImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:onClick="@{() -> gameViewModel.toggleChronoState()}"
             app:layout_constraintBottom_toTopOf="@+id/score_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

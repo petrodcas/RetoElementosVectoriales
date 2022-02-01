@@ -66,6 +66,15 @@ class GameFragment : Fragment() {
             if(hasFinished) onEndGame()
         })
 
+        //PRÁCTICA: se observa el valor del estado del cronómetro para alterar el icono mostrado
+        viewModel.chronoState.observe(viewLifecycleOwner, Observer { chronoState ->
+            binding.chronoImage.setImageDrawable(
+                resources.getDrawable(
+                    if (chronoState) R.drawable.ic_baseline_alarm_48 else R.drawable.ic_baseline_alarm_off_48
+                )
+            )
+        })
+
         return binding.root
 
     }

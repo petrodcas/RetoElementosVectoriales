@@ -22,6 +22,12 @@ class GameViewModel : ViewModel() {
         private const val COUNTDOWN_TIME = 15000L
     }
 
+
+    //PRÁCTICA: determina el estado del cronómetro: En pausa o corriendo.
+    private val _chronoState = MutableLiveData<Boolean>()
+    val chronoState: LiveData<Boolean>
+    get() = _chronoState
+
     //store the current time - countdown
     private val _currentTime = MutableLiveData<Long>()
     private val currentTime: LiveData<Long>
@@ -77,6 +83,8 @@ class GameViewModel : ViewModel() {
             }
         }
         timer.start()
+        //PRÁCTICA: Se inicializa el estado del cronómetro a activo
+        _chronoState.value = true
         _word.value = ""
         _score.value = 0
         _eventGameFinish.value = false
@@ -162,4 +170,8 @@ class GameViewModel : ViewModel() {
         _finalSeconds.value = false
     }
 
+    //PRÁCTICA: cambia el estado del cronómetro
+    fun toggleChronoState() {
+        _chronoState.value = !requireNotNull(chronoState.value)
+    }
 }
