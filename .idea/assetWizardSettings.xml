@@ -323,7 +323,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/alarm/baseline_alarm_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/alarm_off/baseline_alarm_off_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -333,8 +333,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="236eb1" />
-                            <entry key="outputName" value="ic_baseline_alarm_24" />
+                            <entry key="color" value="991f1f" />
+                            <entry key="outputName" value="ic_baseline_alarm_off_48" />
                             <entry key="sourceFile" value="F:\ProyectosAndroidStudio\GuessTheWord-Final" />
                           </map>
                         </option>
