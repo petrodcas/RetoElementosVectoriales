@@ -28,13 +28,16 @@ class GameViewModel : ViewModel() {
     val chronoState: LiveData<Boolean>
     get() = _chronoState
 
+    //PRÁCTICA: cooldown entre uso del cronómetro por parte del usuario, para evitar que se acelere la cuenta atrás
+    private var timerCooldown : CountDownTimer?
+
     //store the current time - countdown
     private val _currentTime = MutableLiveData<Long>()
     private val currentTime: LiveData<Long>
         get() = _currentTime
 
     //Timer
-    private val timer: CountDownTimer
+    private var timer: CountDownTimer
 
     //current time in MM:SS
     val currentTimeString = Transformations.map(currentTime) { time ->
@@ -71,18 +74,10 @@ class GameViewModel : ViewModel() {
 
     //creación del objeto
     init {
-        timer = object : CountDownTimer(COUNTDOWN_TIME, ONE_SECOND) {
-            override fun onTick(millisUntilFinished: Long) {
-                _currentTime.value = millisUntilFinished / ONE_SECOND
-                if(_currentTime.value == 10L) onFinalSeconds()
-            }
-
-            override fun onFinish() {
-                _currentTime.value = DONE
-                onGameFinish()
-            }
-        }
+        //PRÁCTICA: Se inicializa el cronómetro con el valor principal
+        timer = newTimer(COUNTDOWN_TIME)
         timer.start()
+        timerCooldown = null
         //PRÁCTICA: Se inicializa el estado del cronómetro a activo
         _chronoState.value = true
         _word.value = ""
@@ -99,6 +94,8 @@ class GameViewModel : ViewModel() {
         super.onCleared()
         Log.i("GameViewModel", "GameViewModel destruido!")
         timer.cancel()
+        //PRÁCTICA:
+        timerCooldown?.cancel()
     }
 
     /**
@@ -171,7 +168,95 @@ class GameViewModel : ViewModel() {
     }
 
     //PRÁCTICA: cambia el estado del cronómetro
+    /**
+     * Alterna el estado del cronómetro, pero solo si este no se encuentra en cooldown, y ejecuta
+     * los métodos necesarios para que la funcionalidad del cronómetro se ejecute acorde al estado
+     * en que acaba.
+     */
     fun toggleChronoState() {
-        _chronoState.value = !requireNotNull(chronoState.value)
+        //si el cambio de estado del cronómetro está en cooldown, entonces no hace nada
+        if (timerCooldown != null) {
+            return
+        }
+        //almacena temporalmente el estado actual del cronómetro invertido
+        val currentState : Boolean = !requireNotNull(chronoState.value)
+        //actualiza el valor del estado del cronómetro
+        _chronoState.value = currentState
+        //si el cronómetro está activo, entonces reanuda la cuenta atrás, si no, entonces lo para
+        if (currentState)
+            resumeChronoCount()
+        else
+            stopChronoCount()
+        //inicia el cooldown del cambio de estado del contador
+        runCooldown()
+    }
+
+    //PRÁCTICA
+    /**
+     * Crea una cuenta atrás de un segundo y la almacena en la variable timerCooldown.
+     *
+     * Cuando la cuenta atrás finaliza o se interrumpe, anula la cuenta atrás existente, poniéndola a null.
+     */
+    private fun runCooldown () {
+        timerCooldown = object : CountDownTimer(ONE_SECOND, ONE_SECOND) {
+
+            override fun onTick(millisUntilFinished: Long) {
+                //no es necesario hacer nada en este método.
+                Log.d(":::CHRONO_CD", "onTick().")
+            }
+
+            override fun onFinish() {
+                //solamente se elimina la referencia al objeto, de tal manera que se limpia la memoria
+                //y puede usarse su propia existencia o no existencia como bandera
+                Log.d(":::CHRONO_CD", "onFinish(). Destruyendo el timerCooldown")
+                timerCooldown = null
+            }//se inicializa el contador
+        }.start()
+    }
+
+    //PRÁCTICA
+    /** Interrumpe la cuenta atrás actual del cronómetro de juego. */
+    private fun stopChronoCount() {
+        Log.d(":::CHRONO", "Parando el cronómetro. Valor del contador: ${_currentTime.value}")
+        timer.cancel()
+    }
+
+    //PRÁCTICA
+    /**
+     * Reinicia la cuenta atrás del contador desde el estado donde la dejó.
+     *
+     * Este método crea un nuevo cronómetro que parte desde el momento donde lo dejó el anterior y llama a su método start().
+     */
+    private fun resumeChronoCount() {
+        timer = newTimer(requireNotNull(_currentTime.value) * ONE_SECOND)
+        timer.start()
+        Log.d(":::CHRONO", "Iniciando el cronómetro. Valor del contador: ${_currentTime.value}")
+    }
+
+    //PRÁCTICA
+    /**
+     * Devuelve un [CountDownTimer] de acuerdo a los requisitos del cronómetro principal de la partida que empieza a contar
+     * desde el momento determinado por [countdownTime].
+     *
+     * @param countdownTime Tiempo desde el que se comienza a contar.
+     */
+    private fun newTimer(countdownTime: Long) : CountDownTimer {
+       return object : CountDownTimer(countdownTime, ONE_SECOND) {
+           override fun onTick(millisUntilFinished: Long) {
+               _currentTime.value = millisUntilFinished / ONE_SECOND
+               Log.d(":::CHRONO", "onTick(). Valor del contador: ${_currentTime.value}")
+               if (_currentTime.value == 10L) onFinalSeconds()
+           }
+
+           override fun onFinish() {
+               //PRÁCTICA: se modifica el método onFinish() anterior, puesto que establecer el valor del tiempo a cero
+               //al eliminar el CountDownTimer rompe completamente la lógica aplicada para su funcionalidad de parada
+               //y continuación.
+               Log.d(":::CHRONO", "Destruyendo el cronómetro. Valor del contador: ${_currentTime.value}")
+               //Se llama al método onGameFinish() solo si el contador ya tiene un valor igual o menor (para solventar casos de error)
+               //al de DONE.
+               if ( (_currentTime.value as Long) <= DONE) onGameFinish()
+           }
+       }
     }
 }
